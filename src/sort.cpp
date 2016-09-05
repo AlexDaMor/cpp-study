@@ -74,7 +74,48 @@ int* insertion_sort (int* source,int size)
     }
     return source;
 }
-int* merge_sort     (int* source,int size){return nullptr;}
+int* merge_sort     (int* source,int size)
+{ 
+    //array of size 1 is sorted
+    if (1==size)
+    {
+        return source;
+    }
+    //partition array, calc pointers and sizes of parts 
+    int first_part_size=size/2;
+    int second_part_size = size-first_part_size;
+    int* first_part = source;
+    int* second_part = source+(size/2);
+    //sorting recursively
+    first_part=merge_sort(first_part, first_part_size);
+    second_part=merge_sort(second_part, second_part_size);
+    //merging sorted parts to temp array
+    int* temp=new int[size]{};
+    int pos1=0;
+    int pos2=0;
+    int pos_temp=0;
+    while((pos1<first_part_size)&&(pos2<second_part_size))
+    {
+      if (first_part[pos1]<=second_part[pos2])  
+          temp[pos_temp++]=first_part[pos1++];
+      else
+          temp[pos_temp++]=second_part[pos2++];
+         
+    }
+    if (pos1==first_part_size)
+        while(pos2<second_part_size)
+            temp[pos_temp++]=second_part[pos2++];
+    else
+        while(pos1<first_part_size)
+            temp[pos_temp++]=first_part[pos1++];
+    //copy sorted contents to source array
+    for (int i=0;i<size;i++)
+        source[i]=temp[i];
+   
+    delete[] temp;
+
+    return source;
+}
 int* quick_sort     (int* source,int size){return nullptr;}
 int* heap_sort      (int* source,int size){return nullptr;}
 int* selection_sort (int* source,int size){return nullptr;}
@@ -87,7 +128,7 @@ int main()
     int* test=create_source(size,range);
     std::cout<<"Source array"<<std::endl;
     show_array(test,size,4,10);
-    insertion_sort(test,size);
+    merge_sort(test,size);
     std::cout<<std::endl<<"Sorted array"<<std::endl;
     show_array(test,size,4,10);
     delete[] test;
